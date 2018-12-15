@@ -16,7 +16,8 @@ export const createGetRequest = url => {
       response: jest.fn(() => response),
       respond: jest.fn(newResponse => {
         response = newResponse;
-      })
+      }),
+      continue: jest.fn()
     },
     handled: false
   };

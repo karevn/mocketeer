@@ -1,6 +1,12 @@
-export const mock = (mocks, page) => {
+export const mock = (handler, page) => {
   page.setRequestInterception(true);
-  const requestHandler = request => mocks({ request, handled: false });
+  const requestHandler = request => {
+    const { handled } = handler({ request, handled: false });
+    if (!handled) {
+      request.continue();
+    }
+    return { handled, request };
+  };
   page.on("request", requestHandler);
   return () => {
     page.removeListener("request", requestHandler);
