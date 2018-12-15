@@ -1,0 +1,60 @@
+{
+  "name": "mocketeer",
+  "version": "0.0.1",
+  "description": "A network mocking library for Puppeteer",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest",
+    "build:es": "cross-env BABEL_ENV=es babel src --out-dir dist/es",
+    "build": "npm run build:es",
+    "clean": "rimraf dist/* coverage/*",
+    "coverage": "jest --coverage",
+    "prepare": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "puppeteer",
+    "js",
+    "jest",
+    "mock",
+    "network"
+  ],
+  "module": "dist/es/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.txt"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karevn/mocketeer.git"
+  },
+  "author": "Nikolay Karev",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.2.0",
+    "@babel/core": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/runtime": "^7.2.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
+    "cross-env": "^5.2.0",
+    "eslint": "^5.10.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^22.1.2",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "jest": "^23.6.0",
+    "prettier": "^1.15.3",
+    "prettier-eslint": "^8.8.2",
+    "puppeteer": "^1.11.0",
+    "regenerator-runtime": "^0.13.1",
+    "rimraf": "^2.6.2"
+  },
+  "dependencies": {
+    "path-to-regexp": "^2.4.0",
+    "ramda": "^0.26.1"
+  }
+}
