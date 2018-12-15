@@ -1,8 +1,7 @@
 {
   "name": "mocketeer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A network mocking library for Puppeteer",
-  "main": "src/index.js",
   "scripts": {
     "test": "jest",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir dist/es",
