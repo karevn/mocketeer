@@ -1,5 +1,5 @@
-export const mock = (handler, page) => {
-  page.setRequestInterception(true);
+export const mock = async (handler, page) => {
+  await page.setRequestInterception(true);
   const requestHandler = request => {
     const { handled } = handler({ request, handled: false });
     if (!handled) {
@@ -8,13 +8,14 @@ export const mock = (handler, page) => {
     return { handled, request };
   };
   page.on("request", requestHandler);
-  return () => {
+  return async () => {
     page.removeListener("request", requestHandler);
-    page.setRequestInterception(false);
+    await page.setRequestInterception(false);
   };
 };
 
-export const withMock = (mocks, page, callback) => {
-  const detach = mock(mocks, page);
-  return callback(page).then(detach);
+export const withMock = async (mocks, page, callback) => {
+  const detach = await mock(mocks, page);
+  const result = await callback(page);
+  await detach;
 };
