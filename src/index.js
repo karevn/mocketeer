@@ -1,3 +1,3 @@
 export { mock, withMock } from "./mock";
-export { compose } from "ramda";
+export { composeP } from "ramda";
 export { handle, methods } from "./handlers";

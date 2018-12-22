@@ -37,19 +37,21 @@ const getMatch = (url, options) => {
     cachedGetUrlMatch(request);
 };
 
-const respond = (match, request, response) => {
+const respond = async (match, request, response) => {
   request.respond(
-    typeof response === "function" ? response(match, request) : response
+    await Promise.resolve(
+      typeof response === "function" ? response(match, request) : response
+    )
   );
 };
 
-const handleRequest = (compiledMatcher, response) => request => {
+const handleRequest = (compiledMatcher, response) => async request => {
   if (!request) {
     return request;
   }
   const match = compiledMatcher(request);
   if (match) {
-    respond(match, request, response);
+    await respond(match, request, response);
     return null;
   }
   return request;

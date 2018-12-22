@@ -11,21 +11,21 @@ describe("mock", () => {
 
   test("calls request iterceptors upon request", async () => {
     const page = createMockPage();
-    const interceptor = jest.fn(a => null);
-    await mock(interceptor, page);
+    const handler = jest.fn(a => null);
+    await mock(handler, page);
     const request = createGetRequest("http://localhost");
-    page._simulateRequest(request);
-    expect(interceptor).toHaveBeenCalledTimes(1);
-    expect(interceptor).toHaveBeenCalledWith(request);
+    await page._simulateRequest(request);
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler).toHaveBeenCalledWith(request);
     expect(request.continue).not.toHaveBeenCalled();
   });
 
   test("continues the request if nothing has been matched", async () => {
     const page = createMockPage();
-    const interceptor = jest.fn(a => a);
-    await mock(interceptor, page);
+    const handler = jest.fn(a => a);
+    await mock(handler, page);
     const request = createGetRequest("http://localhost");
-    page._simulateRequest(request);
+    await page._simulateRequest(request);
     expect(request.continue).toHaveBeenCalled();
   });
 });

@@ -3,7 +3,8 @@ export const createMockPage = () => {
   return {
     setRequestInterception: jest.fn(),
     on: jest.fn((event, handler) => handlers.push(handler)),
-    _simulateRequest: request => handlers.forEach(handler => handler(request))
+    _simulateRequest: async request =>
+      Promise.all(handlers.map(async handler => await handler(request)))
   };
 };
 

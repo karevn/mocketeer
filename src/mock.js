@@ -1,5 +1,5 @@
-const handleRequestWith = handler => request => {
-  const handled = handler(request);
+const handleRequestWith = handler => async request => {
+  const handled = await handler(request);
   if (handled) {
     handled.continue();
   }

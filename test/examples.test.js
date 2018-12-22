@@ -1,4 +1,4 @@
-import { compose, methods, withMock } from "../src";
+import { composeP, methods, withMock } from "../src";
 import puppeteer from "puppeteer";
 
 describe("examples", () => {
@@ -6,7 +6,7 @@ describe("examples", () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await withMock(
-      compose(
+      composeP(
         methods.get("https://example.com", {
           status: 200,
           body: "Hello world"
