@@ -13,28 +13,36 @@ describe("handle", () => {
 
   it("intercepts urls when urls are equal", () => {
     const handler = get(localhost, expectedResponse);
-    const { request } = handler(createGetRequest(localhost));
+    const request = createGetRequest(localhost);
+    const handled = handler(request);
     expect(request.response()).toEqual(expectedResponse);
+    expect(handled).toBeNull();
   });
 
   it("intercepts urls when urls only differ in the trailing slash", () => {
     const handler = get(localhost, expectedResponse);
-    const { request } = handler(createGetRequest(localhost + "/"));
+    const request = createGetRequest(localhost + "/");
+    const handled = handler(request);
     expect(request.response()).toEqual(expectedResponse);
+    expect(handled).toBeNull();
   });
 
   it("matches child urls when exact is disabled", () => {
     const handler = get(localhost, expectedResponse);
-    const { request } = handler(createGetRequest(localhost + "/foo"));
+    const request = createGetRequest(localhost + "/foo");
+    const handled = handler(request);
     expect(request.response()).toEqual(expectedResponse);
+    expect(handled).toBeNull();
   });
 
   it("does not match child urls when exact is enabled", () => {
     const handler = get(localhost, expectedResponse, {
       exact: true
     });
-    const { request } = handler(createGetRequest(localhost + "/foo"));
+    const request = createGetRequest(localhost + "/foo");
+    const handled = handler(request);
     expect(request.response()).toBeFalsy();
+    expect(handled).toBe(request);
   });
 
   it("can use a function for a response", () => {
@@ -42,30 +50,37 @@ describe("handle", () => {
     const handler = get("http://localhost/:foo", responseMock, {
       exact: true
     });
-    const { request } = handler(createGetRequest("http://localhost/bar"));
+    const request = createGetRequest("http://localhost/bar");
+    const handled = handler(request);
     expect(request.response()).toEqual(expectedResponse);
     expect(responseMock).toHaveBeenCalledTimes(1);
     expect(responseMock).toHaveBeenCalledWith({ foo: "bar" }, request);
+    expect(handled).toBeFalsy();
   });
 
   it("does not intercept urls with non-matching urls", () => {
     const handler = get("http://foo", expectedResponse);
-    const { request } = handler(createGetRequest(localhost));
+    const request = createGetRequest(localhost);
+    const handled = handler(request);
     expect(request.response()).toBeFalsy();
+    expect(handled).toBe(request);
   });
 
   it("checks for a method when matching", () => {
     const handler = post(localhost, expectedResponse);
-    const { request } = handler(createGetRequest(localhost));
+    const request = createGetRequest(localhost);
+    const handled = handler(request);
     expect(request.response()).toBeFalsy();
+    expect(handled).toBe(request);
   });
 
   it("does not do double-processing - the first one wins", () => {
     const handler = get(localhost, expectedResponse);
-    const { request, handled } = handler(createGetRequest(localhost));
-    expect(handled).toBeTruthy();
     const handler2 = get(localhost, { unexpected: true });
-    const { request: request2 } = handler2({ request, handled: true });
-    expect(request2.response()).toEqual(expectedResponse);
+    const request = createGetRequest(localhost);
+    const handled = handler(request);
+    expect(handled).toBeNull();
+    const handled2 = handler2(handled);
+    expect(handled2).toBeNull();
   });
 });

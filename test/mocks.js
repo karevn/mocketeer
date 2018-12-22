@@ -10,15 +10,12 @@ export const createMockPage = () => {
 export const createGetRequest = url => {
   let response = null;
   return {
-    request: {
-      url: jest.fn(() => url),
-      method: jest.fn(() => "GET"),
-      response: jest.fn(() => response),
-      respond: jest.fn(newResponse => {
-        response = newResponse;
-      }),
-      continue: jest.fn()
-    },
-    handled: false
+    url: jest.fn(() => url),
+    method: jest.fn(() => "GET"),
+    response: jest.fn(() => response),
+    respond: jest.fn(newResponse => {
+      response = newResponse;
+    }),
+    continue: jest.fn()
   };
 };

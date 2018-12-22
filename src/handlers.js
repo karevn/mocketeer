@@ -43,21 +43,20 @@ const respond = (match, request, response) => {
   );
 };
 
-export const handle = method => (url, response, options = {}) => {
-  const compiledMatcher = getMatch(url, { method, ...options });
-  return ({ request, handled }) => {
-    if (handled) {
-      return { request, handled };
-    }
-    const match = compiledMatcher(request);
-
-    if (match && !request.response()) {
-      handled = true;
-      respond(match, request, response);
-    }
-    return { request, handled };
-  };
+const handleRequest = (compiledMatcher, response) => request => {
+  if (!request) {
+    return request;
+  }
+  const match = compiledMatcher(request);
+  if (match) {
+    respond(match, request, response);
+    return null;
+  }
+  return request;
 };
+
+export const handle = method => (url, response, options = {}) =>
+  handleRequest(getMatch(url, { method, ...options }), response);
 
 export const methods = {
   get: handle("get"),
