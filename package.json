@@ -53,6 +53,7 @@
     "rimraf": "^2.6.2"
   },
   "dependencies": {
+    "mime-types": "^2.1.21",
     "path-to-regexp": "^2.4.0",
     "ramda": "^0.26.1"
   }

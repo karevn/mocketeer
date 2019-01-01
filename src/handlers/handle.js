@@ -1,5 +1,4 @@
 import pathToRegexp from "path-to-regexp";
-import { curry, flip } from "ramda";
 
 const lowerCaseEqual = (a, b) => a.toLowerCase() === b.toLowerCase();
 
@@ -36,13 +35,10 @@ const getMatch = (url, options) => {
     lowerCaseEqual(options.method, request.method()) &&
     cachedGetUrlMatch(request);
 };
-
 const respond = async (match, request, response) => {
-  request.respond(
-    await Promise.resolve(
-      typeof response === "function" ? response(match, request) : response
-    )
-  );
+  const actualResponse =
+    typeof response === "function" ? await response(match, request) : response;
+  request.respond(actualResponse);
 };
 
 const handleRequest = (compiledMatcher, response) => async request => {
@@ -57,16 +53,5 @@ const handleRequest = (compiledMatcher, response) => async request => {
   return request;
 };
 
-export const handle = method => (url, response, options = {}) =>
+export default method => (url, response, options = {}) =>
   handleRequest(getMatch(url, { method, ...options }), response);
-
-export const methods = {
-  get: handle("get"),
-  post: handle("post"),
-  put: handle("put"),
-  delete: handle("delete"),
-  options: handle("options")
-};
-
-export const handleByUrl = url => (method, response, options = {}) =>
-  handle(method)(url, response, options);
