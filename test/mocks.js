@@ -4,11 +4,11 @@ export const createMockPage = () => {
     setRequestInterception: jest.fn(),
     on: jest.fn((event, handler) => handlers.push(handler)),
     _simulateRequest: async request =>
-      Promise.all(handlers.map(async handler => await handler(request)))
+      Promise.all(handlers.map(async handler => handler(request)))
   };
 };
 
-export const createGetRequest = url => {
+export const createGetRequest = (url, headers = {}) => {
   let response = null;
   return {
     url: jest.fn(() => url),
@@ -17,6 +17,7 @@ export const createGetRequest = url => {
     respond: jest.fn(newResponse => {
       response = newResponse;
     }),
+    headers: jest.fn(() => headers),
     continue: jest.fn()
   };
 };

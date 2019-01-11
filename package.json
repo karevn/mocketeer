@@ -43,6 +43,7 @@
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jest": "^22.1.2",
+    "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "jest": "^23.6.0",
@@ -50,11 +51,14 @@
     "prettier-eslint": "^8.8.2",
     "puppeteer": "^1.11.0",
     "regenerator-runtime": "^0.13.1",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "webpack": "^4.28.3"
   },
   "dependencies": {
     "mime-types": "^2.1.21",
     "path-to-regexp": "^2.4.0",
-    "ramda": "^0.26.1"
+    "ramda": "^0.26.1",
+    "range-parser": "^1.2.0",
+    "webpack-log": "^2.0.0"
   }
 }

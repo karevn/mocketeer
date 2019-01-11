@@ -1,5 +1,7 @@
-import { handle, methods, staticFile } from "../src";
-import { createGetRequest } from "./mocks";
+import { handle, methods, staticFile } from "../../src";
+import { CONTENT_TYPE } from "../../src/handlers/headers";
+import { createGetRequest } from "../mocks";
+
 import path from "path";
 
 const { get, post } = methods;
@@ -100,7 +102,7 @@ describe("staticFile", async () => {
   const serveFile = async (url, fileName) => {
     const getFile = staticFile(
       "http://localhost",
-      path.join(__dirname, fileName)
+      path.join(__dirname, "fixtures", fileName)
     );
     const request = createGetRequest("http://localhost");
     const handled = await getFile(request);
@@ -111,15 +113,15 @@ describe("staticFile", async () => {
   test("it serves text files", async () => {
     const request = await serveFile("http://localhost", "test.txt");
     expect(request.response().headers).toEqual({
-      "Content-type": "text/plain"
+      [CONTENT_TYPE]: "text/plain"
     });
     expect(request.response().body).toBeInstanceOf(Buffer);
   });
 
   test("it serves js files", async () => {
-    const request = await serveFile("http://localhost", "mocks.js");
+    const request = await serveFile("http://localhost", "example.js");
     expect(request.response().headers).toEqual({
-      "Content-type": "application/javascript"
+      [CONTENT_TYPE]: "application/javascript"
     });
     expect(request.response().body).toBeInstanceOf(Buffer);
   });

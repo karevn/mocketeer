@@ -1,4 +1,6 @@
 import pathToRegexp from "path-to-regexp";
+import { tail } from "ramda";
+import { handleRangeHeaders } from "./headers";
 
 const lowerCaseEqual = (a, b) => a.toLowerCase() === b.toLowerCase();
 
@@ -14,7 +16,7 @@ const compilePath = (pattern, options) => {
 };
 
 const getParamsFromMatch = (keys, match) => {
-  const [url, ...values] = match;
+  const values = tail(match);
   return keys.reduce((memo, key, index) => {
     memo[key.name] = values[index];
     return memo;
@@ -35,17 +37,21 @@ const getMatch = (url, options) => {
     lowerCaseEqual(options.method, request.method()) &&
     cachedGetUrlMatch(request);
 };
-const respond = async (match, request, response) => {
-  const actualResponse =
-    typeof response === "function" ? await response(match, request) : response;
-  request.respond(actualResponse);
+
+const isFunction = value => typeof value === "function";
+
+const respond = async (match, request, handler) => {
+  const response = isFunction(handler)
+    ? await handler(match, request)
+    : handler;
+  request.respond(handleRangeHeaders(request, response));
 };
 
-const handleRequest = (compiledMatcher, response) => async request => {
+export const handleRequest = (matcher, response) => async request => {
   if (!request) {
     return request;
   }
-  const match = compiledMatcher(request);
+  const match = matcher(request);
   if (match) {
     await respond(match, request, response);
     return null;
