@@ -3,6 +3,7 @@ import { CONTENT_TYPE } from "../../src/handlers/headers";
 import { createGetRequest } from "../mocks";
 
 import path from "path";
+import { staticDir } from "../../src/handlers/static";
 
 const { get, post } = methods;
 
@@ -124,5 +125,27 @@ describe("staticFile", async () => {
       [CONTENT_TYPE]: "application/javascript"
     });
     expect(request.response().body).toBeInstanceOf(Buffer);
+  });
+});
+
+describe("staticDir", () => {
+  const serveDir = staticDir(
+    "http://localhost/test",
+    path.join(__dirname, "fixtures")
+  );
+
+  test("it serves all files", async () => {
+    const request = createGetRequest("http://localhost/test/example.js");
+    const handled = await serveDir(request);
+    expect(handled).toBeNull();
+    expect(request.response().body).toBeInstanceOf(Buffer);
+  });
+
+  test("it handles 404s", async () => {
+    const request = createGetRequest("http://localhost/test/missing.js");
+    const handled = await serveDir(request);
+    expect(handled).toBeNull();
+    expect(typeof request.response().body).toBe("string");
+    expect(request.response().status).toBe(404);
   });
 });
