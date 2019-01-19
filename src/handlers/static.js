@@ -15,8 +15,10 @@ export const respondWithFile = (path, options) => body => ({
 export const staticFile = (url, path, options = {}) =>
   methods.get(url, () => readFile(path).then(respondWithFile(path, options)));
 
+const trimTrailingSlash = str => str.replace(/\/$/, "");
+
 export const staticDir = (url, path, options = {}) =>
-  methods.get([url, ":filePath"].join("/"), ({ filePath }) =>
+  methods.get([trimTrailingSlash(url), ":filePath"].join("/"), ({ filePath }) =>
     readFile(Path.join(path, filePath))
       .then(respondWithFile(filePath, options))
       .catch(err => {
