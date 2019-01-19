@@ -1,6 +1,6 @@
 {
   "name": "mocketeer",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A network mocking library for Puppeteer",
   "scripts": {
     "test": "jest",
