@@ -14,14 +14,14 @@ describe("webpack", () => {
     }
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     global.console = {
       error: jest.fn(),
       warn: jest.fn(),
       info: jest.fn()
     };
     webpackCompiler = webpack(webpackConfig);
-    handler = webpackHandler(webpackCompiler);
+    handler = await webpackHandler(webpackCompiler);
   });
 
   test("passes through the null request", async () => {
@@ -48,16 +48,7 @@ describe("webpack", () => {
       ...webpackConfig,
       entry: path.join(__dirname, "fixtures", "test.txt")
     });
-    handler = webpackHandler(webpackCompiler);
-    const request = createGetRequest("http://localhost/main.js");
-    const handled = await handler(request);
-
-    expect(handled).toBeNull();
-    expect(request.respond).toHaveBeenCalled();
-    expect(request.response()).toMatchObject({
-      status: 500
-    });
-    expect(console.error).toHaveBeenCalled();
+    await expect(webpackHandler(webpackCompiler)).rejects.toContain("webpack");
   });
 });
 

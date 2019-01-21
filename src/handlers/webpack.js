@@ -110,19 +110,12 @@ const runCompiler = (webpackCompiler, options) => {
   });
 };
 
-export default (webpackCompiler, options = {}) => {
+export default async (webpackCompiler, options = {}) => {
   const compilePromise = runCompiler(webpackCompiler, options);
-  return handleRequest(matcher(webpackCompiler), fileName =>
-    compilePromise
-      .then(() => ({
-        status: 200,
-        body: webpackCompiler.outputFileSystem.readFileSync(fileName),
-        headers: addContentTypeHeader(options.headers, fileName)
-      }))
-      .catch(error => ({
-        status: 500,
-        body: error,
-        headers: { "Content-Type": "text/plain" }
-      }))
-  );
+  await compilePromise;
+  return handleRequest(matcher(webpackCompiler), fileName => ({
+    status: 200,
+    body: webpackCompiler.outputFileSystem.readFileSync(fileName),
+    headers: addContentTypeHeader(options.headers, fileName)
+  }));
 };
